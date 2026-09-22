@@ -1,0 +1,28 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: netflix-mongodb
+    restart: unless-stopped
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build: ./netflix-api
+    container_name: netflix-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
+
+  frontend:
+    build: ./netflix-ui
+    container_name: netflix-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongodb_data:
